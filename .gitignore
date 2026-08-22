@@ -1,0 +1,23 @@
+# Environnements virtuels Python
+venv/
+env/
+__pycache__/
+*.pyc
+
+# Logs générés par les scripts
+*.log
+automation.log
+
+# Credentials (ne jamais committer)
+.env
+*.env
+
+# Fichiers temporaires Packet Tracer
+*.pkt.bak
+*.pka.bak
+
+# OS / éditeurs
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
