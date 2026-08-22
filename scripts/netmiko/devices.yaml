@@ -1,0 +1,47 @@
+# Inventaire des équipements réseau — enterprise-network-lab
+#
+# IMPORTANT (Packet Tracer limitation) :
+# Ces IP correspondent au plan d'adressage du MASTER DESIGN, mais Netmiko ne
+# pourra PAS se connecter à des équipements simulés dans Packet Tracer.
+# Ce fichier est écrit pour cibler du vrai Cisco IOS (matériel réel ou
+# Cisco DevNet Sandbox). Pour ce projet, la connexion sera validée via
+# des tests avec mock plutôt qu'une vraie session SSH.
+#
+# Ne jamais committer de vrais mots de passe ici — en pratique on les
+# lirait depuis une variable d'environnement (voir connect.py).
+
+devices:
+  - name: R-HQ
+    host: 10.10.99.2
+    device_type: cisco_ios
+    role: router
+
+  - name: R-Branch1
+    host: 10.0.12.2
+    device_type: cisco_ios
+    role: router
+
+  - name: R-Branch2
+    host: 10.0.13.2
+    device_type: cisco_ios
+    role: router
+
+  - name: SW-HQ-CORE
+    host: 10.10.99.1
+    device_type: cisco_ios
+    role: l3_switch
+
+  - name: SW-HQ-ACCESS
+    host: 10.10.10.2
+    device_type: cisco_ios
+    role: l2_switch
+
+  - name: SW-Branch1
+    host: 10.20.10.2
+    device_type: cisco_ios
+    role: l2_switch
+
+  - name: SW-Branch2
+    host: 10.30.10.2
+    device_type: cisco_ios
+    role: l2_switch
