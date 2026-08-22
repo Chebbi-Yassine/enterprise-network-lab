@@ -1,0 +1,145 @@
+!==============================================================
+! Site : HQ
+! Équipements : R-HQ, SW-HQ-CORE, SW-HQ-ACCESS
+!==============================================================
+
+!--------------------------------------------------------------
+! R-HQ
+!--------------------------------------------------------------
+hostname R-HQ
+
+interface GigabitEthernet0/0
+ description Transit vers SW-HQ-CORE
+ ip address 10.10.99.2 255.255.255.252
+ ip nat inside
+ no shutdown
+
+interface GigabitEthernet0/1
+ description WAN link to R-ISP (Internet)
+ ip address 200.100.100.1 255.255.255.252
+ ip nat outside
+ no shutdown
+
+interface Serial0/3/0
+ description WAN vers R-Branch1
+ ip address 10.0.12.1 255.255.255.252
+ clock rate 64000
+ ip nat inside
+ no shutdown
+
+interface Serial0/3/1
+ description WAN vers R-Branch2
+ ip address 10.0.13.1 255.255.255.252
+ clock rate 64000
+ ip nat inside
+ no shutdown
+
+router ospf 1
+ network 10.10.99.0 0.0.0.3 area 0
+ network 10.0.12.0 0.0.0.3 area 0
+ network 10.0.13.0 0.0.0.3 area 0
+ default-information originate
+
+ip route 0.0.0.0 0.0.0.0 200.100.100.2
+
+ip access-list standard NAT-INSIDE-NETWORKS
+ permit 10.0.0.0 0.255.255.255
+
+ip nat inside source list NAT-INSIDE-NETWORKS interface GigabitEthernet0/1 overload
+
+snmp-server community NetLab-RO RO
+
+end
+write memory
+
+!--------------------------------------------------------------
+! SW-HQ-CORE
+!--------------------------------------------------------------
+hostname SW-HQ-CORE
+ip routing
+
+vlan 10
+ name MGMT
+vlan 20
+ name USERS
+vlan 30
+ name SERVERS
+vlan 99
+ name NATIVE
+
+interface GigabitEthernet0/1
+ description Trunk vers SW-HQ-ACCESS
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk native vlan 99
+
+interface GigabitEthernet0/2
+ description Transit vers R-HQ
+ no switchport
+ ip address 10.10.99.1 255.255.255.252
+ no shutdown
+
+interface Vlan10
+ ip address 10.10.10.1 255.255.255.0
+ no shutdown
+
+interface Vlan20
+ ip address 10.10.20.1 255.255.255.0
+ ip helper-address 10.10.30.10
+ ip access-group BLOCK-USERS-TO-MGMT in
+ no shutdown
+
+interface Vlan30
+ ip address 10.10.30.1 255.255.255.0
+ no shutdown
+
+router ospf 1
+ network 10.10.10.0 0.0.0.255 area 0
+ network 10.10.20.0 0.0.0.255 area 0
+ network 10.10.30.0 0.0.0.255 area 0
+ network 10.10.99.0 0.0.0.3 area 0
+
+ip access-list extended BLOCK-USERS-TO-MGMT
+ deny ip 10.10.20.0 0.0.0.255 10.10.10.0 0.0.0.255
+ permit ip any any
+
+end
+write memory
+
+!--------------------------------------------------------------
+! SW-HQ-ACCESS
+!--------------------------------------------------------------
+hostname SW-HQ-ACCESS
+
+vlan 10
+ name MGMT
+vlan 20
+ name USERS
+vlan 30
+ name SERVERS
+vlan 99
+ name NATIVE
+
+interface FastEthernet0/1
+ description Vers SRV-HQ
+ switchport mode access
+ switchport access vlan 30
+
+interface FastEthernet0/2
+ description Vers PC-HQ-1
+ switchport mode access
+ switchport access vlan 20
+
+interface FastEthernet0/3
+ description Vers PC-HQ-2
+ switchport mode access
+ switchport access vlan 20
+
+interface GigabitEthernet0/1
+ description Trunk vers SW-HQ-CORE
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk native vlan 99
+
+end
+write memory

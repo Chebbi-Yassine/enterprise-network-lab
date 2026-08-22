@@ -1,0 +1,78 @@
+!==============================================================
+! Site : Branch1
+! Équipements : R-Branch1, SW-Branch1
+!==============================================================
+
+!--------------------------------------------------------------
+! R-Branch1
+!--------------------------------------------------------------
+hostname R-Branch1
+
+interface Serial0/1/0
+ description WAN vers R-HQ
+ ip address 10.0.12.2 255.255.255.252
+ no shutdown
+
+interface GigabitEthernet0/1
+ description Trunk vers SW-Branch1
+ no shutdown
+
+interface GigabitEthernet0/1.10
+ description VLAN10 - MGMT
+ encapsulation dot1Q 10
+ ip address 10.20.10.1 255.255.255.0
+
+interface GigabitEthernet0/1.20
+ description VLAN20 - USERS
+ encapsulation dot1Q 20
+ ip address 10.20.20.1 255.255.255.0
+
+interface GigabitEthernet0/1.99
+ description VLAN99 - NATIVE (inutilisé)
+ encapsulation dot1Q 99 native
+
+router ospf 1
+ network 10.0.12.0 0.0.0.3 area 0
+ network 10.20.10.0 0.0.0.255 area 1
+ network 10.20.20.0 0.0.0.255 area 1
+
+ip dhcp excluded-address 10.20.20.1
+
+ip dhcp pool BRANCH1-USERS
+ network 10.20.20.0 255.255.255.0
+ default-router 10.20.20.1
+ dns-server 8.8.8.8
+
+end
+write memory
+
+!--------------------------------------------------------------
+! SW-Branch1
+!--------------------------------------------------------------
+hostname SW-Branch1
+
+vlan 10
+ name MGMT
+vlan 20
+ name USERS
+vlan 99
+ name NATIVE
+
+interface GigabitEthernet0/1
+ description Trunk vers R-Branch1
+ switchport trunk encapsulation dot1q
+ switchport mode trunk
+ switchport trunk native vlan 99
+
+interface FastEthernet0/1
+ description Vers PC-Branch1-1
+ switchport mode access
+ switchport access vlan 20
+
+interface FastEthernet0/2
+ description Vers PC-Branch1-2
+ switchport mode access
+ switchport access vlan 20
+
+end
+write memory
