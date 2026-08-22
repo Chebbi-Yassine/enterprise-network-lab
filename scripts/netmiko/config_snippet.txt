@@ -1,0 +1,4 @@
+banner motd #
+Accès reserve - enterprise-network-lab - Yassine Chebbi
+#
+"this is just an example of config"
