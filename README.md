@@ -23,27 +23,7 @@ Un bloc "Internet" simulé (R-ISP + Server-Internet) est connecté à R-HQ pour 
 
 ## 4. Topology
 
-```
-                         ┌─────────────────────────┐
-                         │           HQ              │
-                         │  SW-HQ-ACCESS (2960, L2)  │
-                         │        │ trunk             │
-                         │  SW-HQ-CORE (3560, L3)     │
-                         │   VLAN10/20/30 + OSPF      │
-                         │        │ transit           │
-                         │      R-HQ (2911) ── Gig0/1 ── R-ISP ── Server-Internet
-                         └────┬─────────────┬─────────┘        (Internet simulé)
-                     Serial   │             │  Serial
-                    (Area 0)  │             │  (Area 0)
-                    ┌─────────▼───┐   ┌─────▼────────┐
-                    │  R-Branch1  │   │  R-Branch2   │
-                    │  ABR Area1  │   │  ABR Area2   │
-                    │      │      │   │      │       │
-                    │ SW-Branch1  │   │ SW-Branch2   │
-                    └─────────────┘   └──────────────┘
-```
-
-Voir `topologies/drawio/` pour le schéma complet avec adressage, et `topologies/packet-tracer/` pour le fichier `.pkt`.
+<img width="1043" height="707" alt="topologie" src="https://github.com/user-attachments/assets/954792dc-0b96-4bbc-bf90-5e511508e6ee" />
 
 ## 5. Device Inventory
 
