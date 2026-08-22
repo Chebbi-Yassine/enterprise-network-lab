@@ -1,0 +1,33 @@
+6. VLAN Plan
+
+|Site|VLAN ID|Nom|Usage|
+|---|---|---|---|
+|HQ|10|MGMT|Management des équipements|
+|HQ|20|USERS|Postes utilisateurs|
+|HQ|30|SERVERS|Serveurs (SRV-HQ)|
+|HQ|99|NATIVE|VLAN natif du trunk (inutilisé)|
+|Branch1|10|MGMT|Management|
+|Branch1|20|USERS|Postes utilisateurs|
+|Branch1|99|NATIVE|VLAN natif du trunk (inutilisé)|
+|Branch2|10|MGMT|Management|
+|Branch2|20|USERS|Postes utilisateurs|
+|Branch2|99|NATIVE|VLAN natif du trunk (inutilisé)|
+
+## 7. IP Addressing Plan
+
+|Réseau|Sous-réseau|Passerelle|
+|---|---|---|
+|HQ VLAN10 (Mgmt)|10.10.10.0/24|.1 sur SW-HQ-CORE|
+|HQ VLAN20 (Users)|10.10.20.0/24|.1 sur SW-HQ-CORE|
+|HQ VLAN30 (Servers)|10.10.30.0/24|.1 sur SW-HQ-CORE|
+|Transit SW-HQ-CORE ↔ R-HQ|10.10.99.0/30|—|
+|WAN R-HQ ↔ R-Branch1|10.0.12.0/30|—|
+|WAN R-HQ ↔ R-Branch2|10.0.13.0/30|—|
+|Branch1 VLAN10 (Mgmt)|10.20.10.0/24|.1 sur R-Branch1|
+|Branch1 VLAN20 (Users)|10.20.20.0/24|.1 sur R-Branch1|
+|Branch2 VLAN10 (Mgmt)|10.30.10.0/24|.1 sur R-Branch2|
+|Branch2 VLAN20 (Users)|10.30.20.0/24|.1 sur R-Branch2|
+|WAN R-HQ ↔ R-ISP (outside)|200.100.100.0/30|—|
+|R-ISP ↔ Server-Internet|203.0.113.0/24|.1 sur R-ISP|
+
+Logique d'adressage : `10.10.x` = HQ, `10.20.x` = Branch1, `10.30.x` = Branch2, `10.0.x` = liens WAN internes.
