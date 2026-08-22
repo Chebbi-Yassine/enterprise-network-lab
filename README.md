@@ -202,18 +202,7 @@ Dossier `scripts/`, deux approches démontrées :
 |SNMP polling (MIB Browser)|✅ sysDescr/sysUpTime/sysName récupérés|
 |Scripts Python (tests unitaires mock)|✅ 9 tests, tous verts|
 
-## 16. Troubleshooting
-
-Problèmes rencontrés et résolus pendant le projet (conservés comme valeur pédagogique) :
-
-- **`switchport mode trunk` refusé sur le 3560** : nécessite `switchport trunk encapsulation dot1q` avant, contrairement au 2960 qui n'a qu'une seule encapsulation possible.
-- **`%CDP-4-NATIVE_VLAN_MISMATCH`** : le native VLAN du trunk doit être identique des deux côtés — survenu le temps de configurer les deux extrémités.
-- **Port routé sur switch L3 resté `unassigned`** : un port de switch L3 reste en mode switchport par défaut ; nécessite `no switchport` avant de lui donner une IP.
-- **`show ip protocols` vide en attendant les voisins** : normal avant que le voisin en face ait sa propre config OSPF — pas une erreur.
-- **`Activate.ps1` bloqué par PowerShell** : politique d'exécution Windows par défaut ; résolu avec `Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned`.
-- **`show snmp community` : commande invalide** : n'existe pas sous cette forme en IOS classique ; utiliser `show running-config | include snmp` ou `show snmp` à la place.
-
-## 17. Packet Tracer Limitations
+## 16. Packet Tracer Limitations
 
 Limitations rencontrées et documentées tout au long du projet, sans les dissimuler :
 
@@ -221,9 +210,7 @@ Limitations rencontrées et documentées tout au long du projet, sans les dissim
 - **SNMP** : pas de traps/informs configurables. Le polling fonctionne via le MIB Browser intégré de Packet Tracer (confirmé dans ce projet — `sysDescr`, `sysUpTime`, `sysName`), mais un vrai `snmpwalk` externe depuis une VM Linux n'est pas possible.
 - **Wireshark** : les captures dans Packet Tracer sont des simulations du moteur PT, pas de vraies captures de paquets — utiles pédagogiquement mais pas identiques à une capture réseau réelle.
 
-## 18. Screenshots
-
-À ajouter dans `docs/screenshots/` :
+## 17. Screenshots
 
 - Topologie complète Packet Tracer
 - `show ip ospf neighbor` sur R-HQ (3 voisins)
@@ -231,14 +218,10 @@ Limitations rencontrées et documentées tout au long du projet, sans les dissim
 - MIB Browser avec résultats SNMP
 - `show ip dhcp binding` sur chaque site
 
-## 19. Future Improvements
+## 18. Future Improvements
 
 - Migrer le SNMP en SNMPv3 (authentification + chiffrement) si testé sur un vrai équipement
 - Ajouter de la redondance (HSRP/VRRP) sur le core HQ
 - Tester les scripts Netmiko/NAPALM contre un sandbox Cisco DevNet réel pour valider une vraie session SSH
 - Ajouter Syslog centralisé
 - Étendre les ACL avec des règles plus granulaires par service
-
-## 20. Lessons Learned
-
-_(Section à compléter personnellement — ce que tu retiens de la conception, des erreurs corrigées, et de ce que tu referais différemment. C'est la partie que les recruteurs lisent souvent en premier.)_
